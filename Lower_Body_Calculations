@@ -1,0 +1,42 @@
+import sensor_reader_class as src
+import data_read as dr
+import numpy as np
+import math as mt
+
+# EVERYTHING IN METERS
+def InverseKinematics(phi1,phi2,phi3,hipx,hipy,hipz):
+    # Hips as Datum
+    src.points_on_exo.Hips.append(np.matrix( [hip_x],[hip_y],[hipz_z],[1.]]))
+
+    # Ankle Point Left
+    P1a=dr.trans_xyz(src.points_on_exo.LeftFoot[-1],1.,0.0,0.0)
+    src.points_on_exo.LeftAnkle.append(P1a)
+    
+    # Knee Point Left
+    P2a=dr.trans_xyz(src.points_on_exo.LeftFoot[-1],0.,0.,src.link_length.calf_left)  
+    P2a=dr.rot_ab_y_disp(phi1,P2a,0.,0.,0.)
+    P2b=dr.trans_xyz(P2a,1.,0.,0.)
+    src.points_on_exo.LeftKnee.append(P2b)
+    
+    # Hip Point Left  
+    P3a=dr.trans_xyz(src.points_on_exo.LeftFoot[-1],0.,0.,src.link_length.thigh_left)        
+    P3a=dr.rot_ab_y_disp(phi2,P3a,0.,0.,0.) 
+    P3a=dr.trans_xyz(P3a,0.,0.,src.link_length.calf_left)  
+    P3a=dr.rot_ab_y_disp(phi1,P3a,0.,0.,0.)
+    P3b=dr.trans_xyz(P3a,1.,0.,0.)
+    src.points_on_exo.LeftHip.append(P3b)
+
+    # Back Left
+    P4a=dr.trans_xyz(src.points_on_exo.LeftFoot[-1],0.,0.,src.link_length.hip_left)
+    P4a=dr.rot_ab_y_disp(phi3,P4a,0.,0.,0.) 
+    P4a=dr.trans_xyz(P4a,0.,0.,src.link_length.thigh_left)
+    P4a=dr.rot_ab_y_disp(phi2,P4a,0.,0.,0.)
+    P4a=dr.trans_xyz(P4a,0.,0.,src.link_length.calf_left)
+    P4a=dr.rot_ab_y_disp(phi1,P4a,0.,0.,0.)
+    P4b=dr.trans_xyz(P4a,1.,0.,0.)
+    src.points_on_exo.Hips.append(P4b)
+
+    
+    
+    
+
